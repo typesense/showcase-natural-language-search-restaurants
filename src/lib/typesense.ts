@@ -12,9 +12,9 @@ export type _Restaurant = {
   awards: string[];
   popularity_detailed: string;
   top_tags: string[];
-  meals: string;
-  cuisines: string;
-  features: string;
+  meals: string[];
+  cuisines: string[];
+  features: string[];
   vegetarian_friendly: boolean;
   gluten_free: boolean;
   open_hours: string;

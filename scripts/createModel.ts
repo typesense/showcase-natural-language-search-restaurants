@@ -1,3 +1,4 @@
+import { NLSearchModelUpdateSchema } from 'typesense/lib/Typesense/NLSearchModel';
 import { typesense } from '../src/lib/typesense';
 import 'dotenv/config';
 
@@ -12,6 +13,16 @@ const MODEL_ID = 'gemini-model';
 
     if (model) {
       console.log(`Found existing model with id: ${MODEL_ID}`);
+
+      const updatedConfig: NLSearchModelUpdateSchema = {
+        temperature: 0.2,
+        system_prompt: 'You are a helpful assistant.',
+      };
+
+      console.log('Updating model with this configuration:', updatedConfig);
+      await typesense({ isServer: true })
+        .nlSearchModels(MODEL_ID)
+        .update(updatedConfig);
       return;
     }
   } catch (err) {

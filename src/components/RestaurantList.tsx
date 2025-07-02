@@ -44,7 +44,7 @@ export default function CarList({
   }
   return (
     <>
-      <ul className='w-full grid grid-cols-3 gap-4 max-sm:grid-cols-1 max-lg:grid-cols-2'>
+      <ul className='w-full grid grid-cols-1 gap-4 max-sm:grid-cols-1 max-lg:grid-cols-2'>
         {data.pages.map((page) =>
           page.data?.map(({ document }) => (
             <CardItem data={document} key={document.id} />
