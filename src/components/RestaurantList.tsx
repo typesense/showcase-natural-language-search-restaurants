@@ -1,4 +1,3 @@
-import { _CarSchemaResponse, _TypesenseQuery } from '@/schemas/typesense';
 import CardItem from './CardItem';
 import fetchCars, { _carsData } from '@/lib/actions';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -12,7 +11,7 @@ export default function CarList({
   queryKey,
 }: {
   initialData: _carsData;
-  searchParams: _TypesenseQuery;
+  searchParams: object;
   queryKey: string;
 }) {
   const {
@@ -48,7 +47,7 @@ export default function CarList({
       <ul className='w-full grid grid-cols-3 gap-4 max-sm:grid-cols-1 max-lg:grid-cols-2'>
         {data.pages.map((page) =>
           page.data?.map(({ document }) => (
-            <CardItem car={document} key={document.id} />
+            <CardItem data={document} key={document.id} />
           ))
         )}
       </ul>
@@ -56,7 +55,7 @@ export default function CarList({
         <LoaderSVG />
       ) : (
         <div className='w-full text-center text-sm mt-4'>
-          No more cars found.
+          No more restaurants found.
         </div>
       )}
       <div ref={ref} />

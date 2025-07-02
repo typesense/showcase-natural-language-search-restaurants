@@ -1,9 +1,8 @@
 'use client';
-import CarList from '@/components/CarList';
+import RestaurantList from '@/components/RestaurantList';
 import ExampleSearchTerms from '@/components/ExampleSearchTerms';
 import Heading from '@/components/Heading';
-import { typesense } from '@/lib/typesense';
-import { _CarSchemaResponse, _TypesenseQuery } from '@/schemas/typesense';
+import { _Restaurant, typesense } from '@/lib/typesense';
 import { Suspense, useEffect, useState } from 'react';
 import { SearchResponse } from 'typesense/lib/Typesense/Documents';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -27,6 +26,7 @@ export default function Home() {
     </main>
   );
 }
+export type _TypesenseQuery = any;
 
 function Search() {
   const { toast } = useToast();
@@ -41,50 +41,47 @@ function Search() {
   const [queryJsonString, setQueryJsonString] = useState('');
   const [data, setData] = useState<{
     params: _TypesenseQuery;
-    searchResponse: SearchResponse<_CarSchemaResponse>;
+    searchResponse: SearchResponse<_Restaurant>;
   }>();
 
   const found = data?.searchResponse.found || 0;
   const nextPage = 1 * TYPESENSE_PER_PAGE < found ? 2 : null;
 
   async function getCars(q: string) {
-    // setLoadingState('generating');
-    // toast({}).dismiss();
-    // const { data: generatedQuery, error } = await callGenerateTypesenseQuery(q);
-    // if (generatedQuery == null) {
-    //   errorToast(error.message);
-    //   return;
-    // }
-    // setQueryJsonString(JSON.stringify(generatedQuery));
-    // try {
-    //   setLoadingState('searching');
-    //   const params = {
-    //     q: generatedQuery.query || '*',
-    //     filter_by: generatedQuery.filter_by || '',
-    //     sort_by: generatedQuery.sort_by || '',
-    //   };
-    //   const searchResponse = await typesense()
-    //     .collections<_CarSchemaResponse>(clientEnv.TYPESENSE_COLLECTION_NAME)
-    //     .documents()
-    //     .search({
-    //       ...params,
-    //       query_by: 'make,model,market_category',
-    //       per_page: TYPESENSE_PER_PAGE,
-    //     });
-    //   setData({
-    //     params,
-    //     searchResponse,
-    //   });
-    // } catch (error) {
-    //   let errorMsg = '';
-    //   console.log(error);
-    //   if (error instanceof RequestMalformed) {
-    //     errorMsg = error.message;
-    //   }
-    //   errorToast(errorMsg || 'Please try again with a different query.');
-    // } finally {
-    //   setLoadingState('finished');
-    // }
+    toast({}).dismiss();
+    try {
+      setLoadingState('searching');
+
+      const searchResponse = await typesense()
+        .collections<_Restaurant>(clientEnv.TYPESENSE_COLLECTION_NAME)
+        .documents()
+        .search({
+          q,
+          nl_query: true,
+          nl_model_id: 'gemini-model',
+          query_by: 'restaurant_name',
+          per_page: TYPESENSE_PER_PAGE,
+        });
+      console.log(searchResponse);
+
+      setQueryJsonString(
+        JSON.stringify(searchResponse.parsed_nl_query.augmented_params)
+      );
+
+      setData({
+        params: searchResponse.parsed_nl_query.augmented_params,
+        searchResponse,
+      });
+    } catch (error) {
+      let errorMsg = '';
+      console.log(error);
+      if (error instanceof RequestMalformed) {
+        errorMsg = error.message;
+      }
+      errorToast(errorMsg || 'Please try again with a different query.');
+    } finally {
+      setLoadingState('finished');
+    }
   }
 
   const errorToast = (msg: string) =>
@@ -126,7 +123,7 @@ function Search() {
           <div className='self-start mb-2'>
             Found {found} {found > 1 ? 'results' : 'result'}.
           </div>
-          <CarList
+          <RestaurantList
             initialData={{
               data: data.searchResponse.hits,
               nextPage,

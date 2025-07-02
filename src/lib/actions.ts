@@ -1,19 +1,24 @@
-import { _CarSchemaResponse, _TypesenseQuery } from '@/schemas/typesense';
-import { typesense } from './typesense';
+import { SearchParams } from 'typesense/lib/Typesense/Documents';
+import { _Restaurant, typesense } from './typesense';
 import { clientEnv } from '@/utils/env';
 
 export type _carsData = Awaited<ReturnType<ReturnType<typeof fetchCars>>>;
 
-export default function fetchCars(searchParams: _TypesenseQuery) {
+export default function fetchCars(
+  searchParams: SearchParams<_Restaurant, string>
+) {
   return async ({ pageParam }: { pageParam: number }) => {
+    console.log(searchParams);
     const res = await typesense()
-      .collections<_CarSchemaResponse>(clientEnv.TYPESENSE_COLLECTION_NAME)
+      .collections<_Restaurant>(clientEnv.TYPESENSE_COLLECTION_NAME)
       .documents()
       .search({
         ...searchParams,
-        query_by: 'make,model,market_category',
+        query_by: 'restaurant_name',
         per_page: 12,
+        page: pageParam,
       });
+    console.log(res);
     const { per_page = 0 } = res.request_params;
 
     return {
