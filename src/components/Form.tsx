@@ -1,18 +1,15 @@
 import { useEffect, useState } from 'react';
 import { SearchIcon } from './icons';
 import { useRouter } from 'next/navigation';
-import { Button } from './ui/button';
-import { FileJson2, Sheet } from 'lucide-react';
-import {
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from './ui/sheet';
 import ResponseDisplay from './ResponseDisplay';
 
-export default function Form({ q }: { q: string }) {
+export default function Form({
+  q,
+  parsedNLQuery,
+}: {
+  q: string;
+  parsedNLQuery: object | null;
+}) {
   const [query, setQuery] = useState('');
   const router = useRouter();
 
@@ -30,13 +27,13 @@ export default function Form({ q }: { q: string }) {
     >
       <div className='flex-1 relative'>
         <input
-          className='w-full h-full px-5 pr-10 border border-gray-300 rounded-full focus:outline-none placeholder:font-light text-sm'
+          className='w-full h-full font-normal px-5 pr-10 border border-gray-300 rounded-full focus:outline-none placeholder:font-light text-sm'
           type='text'
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Type in the car's specification, e.g. newest manual Ford, V6, under $50K..."
+          placeholder="Type in what you're looking for in a restaurant , e.g. 'best pizza in Italy' or 'sushi in Paris'"
         />
-        <ResponseDisplay />
+        {parsedNLQuery && <ResponseDisplay parsedNLQuery={parsedNLQuery} />}
       </div>
       <button
         className='bg-[#cffc75] aspect-square w-11 grid place-content-center rounded-full hover:bg-[#bee76b] transition'

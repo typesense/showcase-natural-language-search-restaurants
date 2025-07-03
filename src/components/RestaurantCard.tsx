@@ -1,11 +1,22 @@
 import React, { useState } from 'react';
-import { Clock, MapPin, Star, Award, Euro, Leaf, Wheat } from 'lucide-react';
+import {
+  Clock,
+  MapPin,
+  Star,
+  Award,
+  Euro,
+  Leaf,
+  Wheat,
+  HelpCircle,
+  SquareArrowOutUpRight,
+} from 'lucide-react';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { _Restaurant } from '@/lib/typesense';
+import LocalTimeTooltip from './LocalTimeTooltip';
 
 const RestaurantCard = ({
   restaurantData,
@@ -117,6 +128,13 @@ const RestaurantCard = ({
               />
               <h2 className='text-2xl font-bold text-gray-800'>
                 {restaurantData.restaurant_name}
+                <a
+                  target='_blank'
+                  href={`https://www.tripadvisor.com/Restaurant_Review-${restaurantData.restaurant_link}`}
+                  className='text-gray-400 hover:text-gray-600 transition-colors ml-2 inline-block'
+                >
+                  <SquareArrowOutUpRight className='w-4 h-4' />
+                </a>
               </h2>
             </div>
             <p className='text-gray-600 font-medium'>
@@ -290,6 +308,37 @@ const RestaurantCard = ({
               </span>
             ))}
           </div>
+          {/* Meals */}
+          <div className='mt-3'>
+            <div className='text-sm text-gray-600 mb-1'>Meals served:</div>
+            <div className='flex flex-wrap gap-1'>
+              {restaurantData.meals.map((meal, index) => (
+                <span
+                  key={index}
+                  className='inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium'
+                >
+                  {meal}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Features */}
+          {restaurantData.features && restaurantData.features.length > 0 && (
+            <div className='mt-3'>
+              <div className='text-sm text-gray-600 mb-1'>Features:</div>
+              <div className='flex flex-wrap gap-1'>
+                {restaurantData.features.map((feature, index) => (
+                  <span
+                    key={index}
+                    className='inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-medium'
+                  >
+                    {feature}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
         {/* Opening Hours */}
         <div className='p-4'>
@@ -298,6 +347,7 @@ const RestaurantCard = ({
             <h3 className='text-lg font-semibold text-gray-800'>
               Opening Hours
             </h3>
+            <LocalTimeTooltip />
           </div>
           <div className='space-y-2 font-normal'>
             {dayOrder.map((day) => (

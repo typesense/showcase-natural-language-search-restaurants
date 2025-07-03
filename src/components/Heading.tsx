@@ -8,7 +8,7 @@ export default function Heading() {
           Natural language restaurant search
         </h1>
       </Link>
-      <div className='flex items-center gap-2 text-sm'>
+      <div className='flex items-center gap-2 font-normal text-sm'>
         Powered by
         <a
           href='https://typesense.org/'

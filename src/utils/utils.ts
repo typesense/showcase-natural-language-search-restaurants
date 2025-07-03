@@ -17,21 +17,21 @@ export const TRANSMISSION_TYPE = {
 };
 
 export const EXAMPLE_SEARCH_TERMS = [
-  'A honda or BMW with at least 200hp, rear wheel drive, from 20K to 50K, must be newer than 2014',
-  'At least 200hp, must be of American car brands',
-  'Newest sedans, V8, above 300hp, best gas mileage',
-  'Show me the most powerful car you have',
-  'Give me the latest cars',
-  'Diesel SUV, > 200hp',
-  "I don't know how to drive a manual",
-  'Electric cars under 30K',
-  'High performance Italian cars, above 700hp',
-  'Luxury car without premium fuel',
-  "Luxury hybrid car without premium fuel that's not an audi or a cadillac",
-  'Hybrid cars with at least a city mileage of 25 and highway mileage of 40',
+  'Best pizza in Italy',
+  'Restaurant with 5 stars food and service rating',
+  '5€ quick lunch in Paris',
+  'Free wifi and wheelchair accessible',
+  'Good restaurants in Berlin',
+  'I am vegan',
+  'I like spicy food',
+  'Restaurants open 5 am to 11 pm',
+  'Restaurants good for kids',
 ];
 
-export const TYPESENSE_PER_PAGE = 12;
+export const TYPESENSE_CONFIG = {
+  per_page: 12,
+  query_by: 'restaurant_name,address',
+};
 
 export function booleanToYesNo(bool: boolean | null | undefined) {
   return bool ? 'Yes' : 'No';

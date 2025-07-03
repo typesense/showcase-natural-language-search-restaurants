@@ -11,7 +11,11 @@ import {
 import JsonView from 'react18-json-view';
 import 'react18-json-view/src/style.css';
 
-export default function ResponseDisplay() {
+export default function ResponseDisplay({
+  parsedNLQuery,
+}: {
+  parsedNLQuery: object;
+}) {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -25,13 +29,20 @@ export default function ResponseDisplay() {
       </SheetTrigger>
       <SheetContent className='w-[85vw]'>
         <SheetHeader>
-          <SheetTitle>Generated filter query</SheetTitle>
+          <SheetTitle>Generated Typesense query</SheetTitle>
           <SheetDescription>
-            Make changes to your profile here. Click save when you&apos;re done.
+            <a
+              className='underline underline-offset-2'
+              target='_blank'
+              href='https://typesense.org/docs/latest/api/natural-language-search.html#response-fields'
+            >
+              See docs
+            </a>{' '}
+            for more details.
           </SheetDescription>
         </SheetHeader>
-        <div className='mt-4'>
-          <JsonView src={{ hello: true }} />
+        <div className='mt-4 !text-sm'>
+          <JsonView src={parsedNLQuery} theme='atom' />
         </div>
       </SheetContent>
     </Sheet>

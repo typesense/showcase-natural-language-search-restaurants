@@ -15,6 +15,7 @@ import Header from '@/components/Header';
 import { clientEnv } from '@/utils/env';
 import React from 'react';
 import { RequestMalformed } from 'typesense/lib/Typesense/Errors';
+import { set } from 'zod';
 export default function Home() {
   return (
     <main className='flex flex-col items-center px-2 py-10 max-w-screen-lg m-auto font-medium'>
@@ -33,12 +34,12 @@ function Search() {
   const searchParams = useSearchParams();
   const q = searchParams.get('q') || '';
   const router = useRouter();
+  const [parsedNLQuery, setParsedNLQuery] = useState<object | null>(null);
 
   const [loadingState, setLoadingState] = useState<
     'generating' | 'searching' | 'finished'
   >('finished');
 
-  const [queryJsonString, setQueryJsonString] = useState('');
   const [data, setData] = useState<{
     params: _TypesenseQuery;
     searchResponse: SearchResponse<_Restaurant>;
@@ -64,9 +65,7 @@ function Search() {
         });
       console.log(searchResponse);
 
-      setQueryJsonString(
-        JSON.stringify(searchResponse.parsed_nl_query.augmented_params)
-      );
+      setParsedNLQuery(searchResponse.parsed_nl_query.augmented_params);
 
       setData({
         params: searchResponse.parsed_nl_query.augmented_params,
@@ -99,7 +98,7 @@ function Search() {
 
   useEffect(() => {
     setData(undefined);
-    setQueryJsonString('');
+    setParsedNLQuery(null);
     q && getCars(q);
   }, [q]);
 
@@ -128,7 +127,7 @@ function Search() {
               data: data.searchResponse.hits,
               nextPage,
             }}
-            queryKey={queryJsonString}
+            queryKey={JSON.stringify(parsedNLQuery)}
             searchParams={data.params}
           />
         </>
@@ -143,12 +142,7 @@ function Search() {
 
   return (
     <>
-      <Form q={q} />
-      {
-        <pre className='text-xs mb-4 block max-w-full overflow-auto'>
-          {queryJsonString}
-        </pre>
-      }
+      <Form q={q} parsedNLQuery={parsedNLQuery} />
       {render()}
     </>
   );

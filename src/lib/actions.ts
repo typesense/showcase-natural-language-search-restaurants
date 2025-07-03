@@ -1,6 +1,7 @@
 import { SearchParams } from 'typesense/lib/Typesense/Documents';
 import { _Restaurant, typesense } from './typesense';
 import { clientEnv } from '@/utils/env';
+import { TYPESENSE_PER_PAGE } from '@/utils/utils';
 
 export type _carsData = Awaited<ReturnType<ReturnType<typeof fetchCars>>>;
 
@@ -15,10 +16,9 @@ export default function fetchCars(
       .search({
         ...searchParams,
         query_by: 'restaurant_name',
-        per_page: 12,
+        per_page: TYPESENSE_PER_PAGE,
         page: pageParam,
       });
-    console.log(res);
     const { per_page = 0 } = res.request_params;
 
     return {
