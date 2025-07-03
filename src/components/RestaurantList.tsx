@@ -1,9 +1,9 @@
-import CardItem from './CardItem';
 import fetchCars, { _carsData } from '@/lib/actions';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import LoaderSVG from './LoaderSVG';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
+import RestaurantCard from './RestaurantCard';
 
 export default function CarList({
   initialData,
@@ -44,10 +44,10 @@ export default function CarList({
   }
   return (
     <>
-      <ul className='w-full grid grid-cols-1 gap-4 max-sm:grid-cols-1 max-lg:grid-cols-2'>
+      <ul className='w-full grid grid-cols-2 gap-4 max-sm:grid-cols-1 max-lg:grid-cols-2'>
         {data.pages.map((page) =>
           page.data?.map(({ document }) => (
-            <CardItem data={document} key={document.id} />
+            <RestaurantCard restaurantData={document} key={document.id} />
           ))
         )}
       </ul>

@@ -4,7 +4,7 @@ export default function Heading() {
   return (
     <div className='mb-6 flex flex-col items-center gap-2'>
       <Link href={'/'}>
-        <h1 className='text-3xl font-bold'>
+        <h1 className='text-3xl font-bold capitalize'>
           Natural language restaurant search
         </h1>
       </Link>
@@ -14,9 +14,12 @@ export default function Heading() {
           href='https://typesense.org/'
           target='_blank'
           rel='noopener noreferrer'
-          className='text-[#D90368]'
         >
-          type<b>sense|</b>
+          <img
+            className='h-6'
+            src='https://typesense.org/typesense-logo.svg'
+            alt='Typesense logo'
+          />
         </a>
       </div>
     </div>

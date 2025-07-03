@@ -17,7 +17,7 @@ export type _Restaurant = {
   features: string[];
   vegetarian_friendly: boolean;
   gluten_free: boolean;
-  open_hours: string;
+  open_hours: { day: string; open: number; close: number }[];
   open_days_per_week: number | null;
   avg_rating: number;
   total_reviews_count: number;
