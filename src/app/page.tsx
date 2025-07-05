@@ -10,12 +10,13 @@ import Form from '@/components/Form';
 import LoaderSVG from '@/components/LoaderSVG';
 import { useToast } from '@/components/ui/use-toast';
 import { ToastAction } from '@/components/ui/toast';
-import { TYPESENSE_PER_PAGE } from '@/utils/utils';
+import { TYPESENSE_CONFIG } from '@/utils/utils';
 import Header from '@/components/Header';
 import { clientEnv } from '@/utils/env';
 import React from 'react';
 import { RequestMalformed } from 'typesense/lib/Typesense/Errors';
-import { set } from 'zod';
+import getUserLocation from '@/hooks/getUserLocation';
+
 export default function Home() {
   return (
     <main className='flex flex-col items-center px-2 py-10 max-w-screen-lg m-auto font-medium'>
@@ -27,6 +28,7 @@ export default function Home() {
     </main>
   );
 }
+
 export type _TypesenseQuery = any;
 
 function Search() {
@@ -35,10 +37,11 @@ function Search() {
   const q = searchParams.get('q') || '';
   const router = useRouter();
   const [parsedNLQuery, setParsedNLQuery] = useState<object | null>(null);
+  const { location, error } = getUserLocation();
 
-  const [loadingState, setLoadingState] = useState<
-    'generating' | 'searching' | 'finished'
-  >('finished');
+  const [loadingState, setLoadingState] = useState<'searching' | 'finished'>(
+    'finished'
+  );
 
   const [data, setData] = useState<{
     params: _TypesenseQuery;
@@ -46,22 +49,25 @@ function Search() {
   }>();
 
   const found = data?.searchResponse.found || 0;
-  const nextPage = 1 * TYPESENSE_PER_PAGE < found ? 2 : null;
+  const nextPage = 1 * TYPESENSE_CONFIG.per_page < found ? 2 : null;
 
   async function getCars(q: string) {
     toast({}).dismiss();
     try {
       setLoadingState('searching');
 
+      const query = q + (location ? ` USER:${location}` : '');
+
       const searchResponse = await typesense()
         .collections<_Restaurant>(clientEnv.TYPESENSE_COLLECTION_NAME)
         .documents()
         .search({
-          q,
+          q: query,
+          // filter_by: 'open_hours.{day:=Mon && open:<=9 && close:>=9}',
           nl_query: true,
           nl_model_id: 'gemini-model',
-          query_by: 'restaurant_name',
-          per_page: TYPESENSE_PER_PAGE,
+          query_by: TYPESENSE_CONFIG.query_by,
+          per_page: TYPESENSE_CONFIG.per_page,
         });
       console.log(searchResponse);
 
@@ -99,18 +105,12 @@ function Search() {
   useEffect(() => {
     setData(undefined);
     setParsedNLQuery(null);
-    q && getCars(q);
-  }, [q]);
+
+    if (q && (location || error)) getCars(q);
+  }, [q, location, error]);
 
   const render = () => {
-    if (loadingState !== 'finished')
-      return (
-        <LoaderSVG
-          message={
-            loadingState == 'generating' ? 'Generating Typesense query...' : ''
-          }
-        />
-      );
+    if (loadingState !== 'finished') return <LoaderSVG />;
 
     if (data)
       return found == 0 ? (

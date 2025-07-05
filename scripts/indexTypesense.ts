@@ -38,7 +38,8 @@ const PATH_TO_DATASET = './scripts/data/restaurants.jsonl';
   await typesense.collections().create({
     name: COLLECTION_NAME,
     fields: [
-      { name: 'restaurant_name', type: 'string', facet: true },
+      { name: 'restaurant_name', type: 'string' },
+      { name: 'address', type: 'string' },
       { name: 'country', type: 'string', facet: true },
       { name: 'region', type: 'string', optional: true, facet: true },
       { name: 'province', type: 'string', facet: true, optional: true },
@@ -57,6 +58,7 @@ const PATH_TO_DATASET = './scripts/data/restaurants.jsonl';
       { name: 'open_days_per_week', type: 'int32' },
       { name: 'avg_rating', type: 'float' },
       { name: 'total_reviews_count', type: 'int32' },
+      // specific rating score
       { name: 'food', type: 'float' },
       { name: 'service', type: 'float', optional: true },
       { name: 'value', type: 'float', optional: true },
