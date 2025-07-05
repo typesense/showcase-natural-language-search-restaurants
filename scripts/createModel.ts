@@ -21,7 +21,7 @@ When filtering on fields inside nested array objects, you need to use a special 
 E.g: open_hours.{day:=Mon && close:>=11}
 
 To search within a Radius use this syntax in the filter_by: location:(lat, long, X km). You can also use miles "mi".
-E.g: location:(48.90615915923891, 2.3435897727061175, 2 mi)
+E.g: location:(48.9, 2.34, 2 mi)
 The user's location will be embedded in the query in case they want to find restaurant near them (always remove it from your query after processing), in this format: USER:lat,long
 Use this user location for geosearch only if the query contains phrases like "near me".
 An user might ask to find restaurant near a place, in that case, use your knowlegde about the geolocation of that place.
