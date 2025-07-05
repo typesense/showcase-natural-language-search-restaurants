@@ -1,4 +1,4 @@
-import fetchCars, { _carsData } from '@/lib/actions';
+import fetchData, { _searchData } from '@/lib/actions';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import LoaderSVG from './LoaderSVG';
 import { useInView } from 'react-intersection-observer';
@@ -10,7 +10,7 @@ export default function CarList({
   searchParams,
   queryKey,
 }: {
-  initialData: _carsData;
+  initialData: _searchData;
   searchParams: object;
   queryKey: string;
 }) {
@@ -22,8 +22,8 @@ export default function CarList({
     isFetchingNextPage,
     status,
   } = useInfiniteQuery({
-    queryKey: ['cars', queryKey],
-    queryFn: fetchCars(searchParams),
+    queryKey: ['restaurants', queryKey],
+    queryFn: fetchData(searchParams),
     initialData: { pages: [initialData], pageParams: [1] },
     initialPageParam: 1,
     getNextPageParam: (lastPage) => lastPage.nextPage,

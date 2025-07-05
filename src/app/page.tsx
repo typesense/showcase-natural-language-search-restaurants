@@ -38,6 +38,7 @@ declare module 'typesense/lib/Typesense/Documents' {
     nl_query_debug?: boolean;
   }
 }
+export type _TypesenseQuery = SearchParams<any, any>;
 
 export default function Home() {
   return (
@@ -50,8 +51,6 @@ export default function Home() {
     </main>
   );
 }
-
-export type _TypesenseQuery = any;
 
 function Search() {
   const { toast } = useToast();
@@ -74,7 +73,7 @@ function Search() {
   const nextPage = 1 * TYPESENSE_CONFIG.per_page < found ? 2 : null;
 
   // Here we perform an initial search to get the llm generated params which we will then use for subsequent pagination requests
-  async function getCars(q: string) {
+  async function initialSearch(q: string) {
     toast({}).dismiss();
     setParsedNLQuery(null);
     setData(undefined);
@@ -121,7 +120,7 @@ function Search() {
       description: msg,
       duration: 5000,
       action: (
-        <ToastAction onClick={() => getCars(q)} altText='Try again'>
+        <ToastAction onClick={() => initialSearch(q)} altText='Try again'>
           Try again
         </ToastAction>
       ),
@@ -134,7 +133,7 @@ function Search() {
 
   useEffect(() => {
     // Initial search
-    if (q && (location || error)) getCars(q);
+    if (q && (location || error)) initialSearch(q);
   }, [q, location, error]);
 
   const render = () => {
@@ -175,7 +174,11 @@ function Search() {
 
   return (
     <>
-      <Form q={q} parsedNLQuery={parsedNLQuery} onSubmit={(q) => getCars(q)} />
+      <Form
+        q={q}
+        parsedNLQuery={parsedNLQuery}
+        onSubmit={(q) => initialSearch(q)}
+      />
       {render()}
     </>
   );

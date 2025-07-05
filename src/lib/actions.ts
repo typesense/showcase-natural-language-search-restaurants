@@ -3,9 +3,9 @@ import { _Restaurant, typesense } from './typesense';
 import { clientEnv } from '@/utils/env';
 import { TYPESENSE_CONFIG } from '@/utils/utils';
 
-export type _carsData = Awaited<ReturnType<ReturnType<typeof fetchCars>>>;
+export type _searchData = Awaited<ReturnType<ReturnType<typeof fetchData>>>;
 
-export default function fetchCars(
+export default function fetchData(
   searchParams: SearchParams<_Restaurant, string>
 ) {
   return async ({ pageParam }: { pageParam: number }) => {
