@@ -54,7 +54,7 @@
   "service": 4.5,
   "value": 4.5,
   "atmosphere": null,
-  "geopoint": [47.062153, 21.932116],
+  "location": [47.062153, 21.932116],
   "price_min": 2,
   "price_max": 20
 }
