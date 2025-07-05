@@ -7,7 +7,6 @@ import {
   Euro,
   Leaf,
   Wheat,
-  HelpCircle,
   SquareArrowOutUpRight,
 } from 'lucide-react';
 import {
@@ -36,16 +35,27 @@ const RestaurantCard = ({
   };
 
   // Group hours by day
-  const groupedHours = restaurantData.open_hours.reduce((acc, hour) => {
-    if (!acc[hour.day]) {
-      acc[hour.day] = [];
-    }
-    acc[hour.day].push({ open: hour.open, close: hour.close });
-    return acc;
-  }, {});
+  const groupedHours = restaurantData.open_hours.reduce(
+    (acc: { [day: string]: { open: number; close: number }[] }, hour) => {
+      if (!acc[hour.day]) {
+        acc[hour.day] = [];
+      }
+      acc[hour.day].push({ open: hour.open, close: hour.close });
+      return acc;
+    },
+    {}
+  );
 
   // Define day order and full names
-  const dayOrder = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const dayOrder: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] = [
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat',
+    'Sun',
+  ];
   const dayNames = {
     Mon: 'Monday',
     Tue: 'Tuesday',
@@ -89,7 +99,7 @@ const RestaurantCard = ({
   };
 
   // Get percentage for review breakdown
-  const getReviewPercentage = (value) => {
+  const getReviewPercentage = (value: number) => {
     if (restaurantData.total_reviews_count === 0) return 0;
     return Math.round((value / restaurantData.total_reviews_count) * 100);
   };

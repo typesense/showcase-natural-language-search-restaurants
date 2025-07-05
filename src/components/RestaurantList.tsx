@@ -44,7 +44,7 @@ export default function CarList({
   }
   return (
     <>
-      <ul className='w-full grid grid-cols-2 gap-4 max-sm:grid-cols-1 max-lg:grid-cols-2'>
+      <ul className='w-full grid grid-cols-2 gap-4 max-md:grid-cols-1'>
         {data.pages.map((page) =>
           page.data?.map(({ document }) => (
             <RestaurantCard restaurantData={document} key={document.id} />

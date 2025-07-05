@@ -4,7 +4,7 @@ export default function Heading() {
   return (
     <div className='mb-6 flex flex-col items-center gap-2'>
       <Link href={'/'}>
-        <h1 className='text-3xl font-bold capitalize'>
+        <h1 className='text-3xl font-bold capitalize text-center'>
           Natural language restaurant search
         </h1>
       </Link>
