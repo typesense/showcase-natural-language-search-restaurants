@@ -41,6 +41,8 @@ This demo uses the dataset "TripAdvisor European restaurants" which is available
         └── typesense.ts # typesense config
 ```
 
+You can view the specific LLM instructions for this project in [createModel.ts](/scripts/createModel.ts)
+
 ## Development
 
 To run this project locally, make sure you have docker and nodejs, clone this project, install dependencies and start the dev server:
@@ -57,7 +59,7 @@ Index data into typesense
 npm run index:typesense
 ```
 
-Create a natural language search model, this script is also used to update the model's `system_prompt`
+Create a natural language search model, this script is also used to update the model's `system_prompt`.
 
 ```shell
 npm run createModel:typesense
