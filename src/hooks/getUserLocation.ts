@@ -1,3 +1,4 @@
+import { toast } from '@/components/ui/use-toast';
 import { useEffect, useState } from 'react';
 
 export default function getUserLocation() {
@@ -8,8 +9,6 @@ export default function getUserLocation() {
     navigator.permissions.query({ name: 'geolocation' }).then((result) => {
       if (result.state === 'granted') {
         navigator.geolocation.getCurrentPosition((position) => {
-          console.log(position);
-
           setLocation([position.coords.latitude, position.coords.longitude]);
         });
       } else if (result.state === 'prompt') {
@@ -21,6 +20,11 @@ export default function getUserLocation() {
           (err) => setError(err.message)
         );
       } else {
+        toast({
+          title: `Permission for location denied!`,
+          description: 'This is used for queries like "Restaurants near me".',
+          duration: 4000,
+        });
         setError('Permission denied');
       }
     });

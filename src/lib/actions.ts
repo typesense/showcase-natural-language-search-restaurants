@@ -9,7 +9,6 @@ export default function fetchCars(
   searchParams: SearchParams<_Restaurant, string>
 ) {
   return async ({ pageParam }: { pageParam: number }) => {
-    console.log(searchParams);
     const res = await typesense()
       .collections<_Restaurant>(clientEnv.TYPESENSE_COLLECTION_NAME)
       .documents()

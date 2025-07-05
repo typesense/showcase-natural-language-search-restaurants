@@ -4,7 +4,10 @@ import ExampleSearchTerms from '@/components/ExampleSearchTerms';
 import Heading from '@/components/Heading';
 import { _Restaurant, typesense } from '@/lib/typesense';
 import { Suspense, useEffect, useState } from 'react';
-import { SearchResponse } from 'typesense/lib/Typesense/Documents';
+import {
+  SearchResponse,
+  SearchParams,
+} from 'typesense/lib/Typesense/Documents';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Form from '@/components/Form';
 import LoaderSVG from '@/components/LoaderSVG';
@@ -16,6 +19,25 @@ import { clientEnv } from '@/utils/env';
 import React from 'react';
 import { RequestMalformed } from 'typesense/lib/Typesense/Errors';
 import getUserLocation from '@/hooks/getUserLocation';
+
+// This version of typesense-js hasn't had support for NL search types yet
+declare module 'typesense/lib/Typesense/Documents' {
+  interface SearchResponse<T> {
+    parsed_nl_query: {
+      augmented_params: object;
+      generated_params: object;
+      parse_time_ms: number;
+    };
+  }
+  interface SearchParams<
+    TDoc extends DocumentSchema,
+    Infix extends string = string
+  > {
+    nl_query?: boolean;
+    nl_model_id?: string;
+    nl_query_debug?: boolean;
+  }
+}
 
 export default function Home() {
   return (
@@ -51,27 +73,30 @@ function Search() {
   const found = data?.searchResponse.found || 0;
   const nextPage = 1 * TYPESENSE_CONFIG.per_page < found ? 2 : null;
 
+  // Here we perform an initial search to get the llm generated params which we will then use for subsequent pagination requests
   async function getCars(q: string) {
     toast({}).dismiss();
-    try {
-      setLoadingState('searching');
+    setParsedNLQuery(null);
+    setData(undefined);
+    setLoadingState('searching');
 
-      const query = q + (location ? ` USER:${location}` : '');
+    try {
+      // embedding the user location inside the query
+      const query =
+        q + (location ? ` USER:${location}` : 'USER:permissionDenied');
 
       const searchResponse = await typesense()
         .collections<_Restaurant>(clientEnv.TYPESENSE_COLLECTION_NAME)
         .documents()
         .search({
           q: query,
-          // filter_by: 'open_hours.{day:=Mon && open:<=9 && close:>=9}',
           nl_query: true,
           nl_model_id: 'gemini-model',
           query_by: TYPESENSE_CONFIG.query_by,
           per_page: TYPESENSE_CONFIG.per_page,
         });
-      console.log(searchResponse);
 
-      setParsedNLQuery(searchResponse.parsed_nl_query.augmented_params);
+      setParsedNLQuery(searchResponse.parsed_nl_query);
 
       setData({
         params: searchResponse.parsed_nl_query.augmented_params,
@@ -103,24 +128,30 @@ function Search() {
     });
 
   useEffect(() => {
-    setData(undefined);
     setParsedNLQuery(null);
+    setData(undefined);
+  }, [q]);
 
+  useEffect(() => {
+    // Initial search
     if (q && (location || error)) getCars(q);
   }, [q, location, error]);
 
   const render = () => {
     if (loadingState !== 'finished') return <LoaderSVG />;
 
-    if (data)
+    if (data) {
+      const parsedTime = data.searchResponse.parsed_nl_query.parse_time_ms;
+      const searchTime = data.searchResponse.search_time_ms - parsedTime;
       return found == 0 ? (
         <div className='mt-20 text-light'>
           Oops! Couldn't find what you are looking for.
         </div>
       ) : (
         <>
-          <div className='self-start mb-2'>
-            Found {found} {found > 1 ? 'results' : 'result'}.
+          <div className='self-start mb-4 text-sm'>
+            Found {found} {found > 1 ? 'results' : 'result'} in {searchTime}ms,
+            parsing took {parsedTime}ms.
           </div>
           <RestaurantList
             initialData={{
@@ -128,10 +159,12 @@ function Search() {
               nextPage,
             }}
             queryKey={JSON.stringify(parsedNLQuery)}
+            // Pass the generated params to use for pagination
             searchParams={data.params}
           />
         </>
       );
+    }
 
     return (
       <ExampleSearchTerms
@@ -142,7 +175,7 @@ function Search() {
 
   return (
     <>
-      <Form q={q} parsedNLQuery={parsedNLQuery} />
+      <Form q={q} parsedNLQuery={parsedNLQuery} onSubmit={(q) => getCars(q)} />
       {render()}
     </>
   );

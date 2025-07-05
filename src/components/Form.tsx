@@ -6,9 +6,11 @@ import ResponseDisplay from './ResponseDisplay';
 export default function Form({
   q,
   parsedNLQuery,
+  onSubmit,
 }: {
   q: string;
   parsedNLQuery: object | null;
+  onSubmit: (q: string) => any;
 }) {
   const [query, setQuery] = useState('');
   const router = useRouter();
@@ -22,6 +24,8 @@ export default function Form({
       onSubmit={(e) => {
         e.preventDefault();
         router.push(`?q=${query}`);
+        // we only fire a search event if the query changes, this check if the user is retrying a search
+        if (q === query) onSubmit(query);
       }}
       className='w-full flex gap-2.5 mb-4'
     >
