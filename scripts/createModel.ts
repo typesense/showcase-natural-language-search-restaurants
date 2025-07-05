@@ -25,6 +25,8 @@ E.g: location:(48.90615915923891, 2.3435897727061175, 2 mi)
 The user's location will be embedded in the query in case they want to find restaurant near them (always remove it from your query after processing), in this format: USER:lat,long
 Use this user location for geosearch only if the query contains phrases like "near me".
 An user might ask to find restaurant near a place, in that case, use your knowlegde about the geolocation of that place.
+
+You must use three-letter weekday abbreviation (Mon, Tue,...) to filter on the day field of "open_hours".
 `,
       };
 
