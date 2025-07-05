@@ -1,8 +1,16 @@
 <h1>
- 🔥 Natural Language Restaurant Search powered by Typesense
+ 🔥 🤖 🍖 Natural Language Restaurant Search powered by Typesense
 </h1>
-
-Search for the perfect car by describing it in natural language. We use a technique called "Generation Augmented Retrieval" to convert the natural language query into a Typesense query.
+This demo restaurant search showcases the new Natural Language Search feature powered by Typesense. This allows users to search for restaurants using everyday language.
+<br>
+<br>
+Instead of needing to use specific keywords or precise filters, you can simply type a free-form sentence into the search bar. Typesense then uses Large Language Models (LLMs) to understand your intent, automatically translating your natural language query into structured search parameters like filters, sort orders, and relevant keywords.
+<br>
+<br>
+This means you can find exactly what you're looking for with ease and flexibility, even if your exact keywords aren't in the restaurant's description. Experience a more intuitive and powerful way to discover your next dining destination!
+<br>
+<br>
+This demo uses the dataset "TripAdvisor European restaurants" which is available on a <a href="https://www.kaggle.com/datasets/stefanoleone992/tripadvisor-european-restaurants" target="_blank">Kaggle</a>.
 
 ## Tech Stack
 
@@ -13,25 +21,24 @@ Search for the perfect car by describing it in natural language. We use a techni
 - Tailwind
 - React Query
 
-The dataset contains 6500 cars and is available on <a href="https://www.kaggle.com/datasets/rupindersinghrana/car-features-and-prices-dataset" target="_blank">Kaggle</a>.
-
 ## Project Structure
 
 ```bash
 ├── scripts/
 │   ├── data/
-│   │   └── cars.json
-│   └── indexTypesense.ts # script that index data from cars.json into typesense server
+│   │   └── restaurants.jsonl
+│   ├── indexTypesense.ts # script that create a collection and index data from restaurants.json into typesense server
+│   └── createModel.ts # create a Typesense natural language search model, update system_prompt if model already exists
 └── src/
     ├── app/
-    │   ├── genkit.ts # AI prompt and flows
-    │   └── page.tsx
+    │   └── page.tsx # main application
     ├── components/
     │   └── UI components...
-    ├── schemas/
-    │   └── typesense.ts # define the response schema for genkit.ts
+    ├── hooks/
+    │   └── getUserLocation.ts # provide the user location for the LLM to perform geosearch
     └── lib/
-        └── typesense.ts # typesense client config
+        ├── actions.ts # the search function used for pagination
+        └── typesense.ts # typesense config
 ```
 
 ## Development
@@ -50,10 +57,10 @@ Index data into typesense
 npm run index:typesense
 ```
 
-Update collection metadata, this will be used to provide additional information about each collection property for the LLM.
+Create a natural language search model, this script is also used to update the model's `system_prompt`
 
 ```shell
-npm run updateMetadata:typesense
+npm run createModel:typesense
 ```
 
 Start the dev server
