@@ -28,7 +28,7 @@ const MODEL_ID =
 When filtering on fields inside nested array objects, you need to use a special syntax to ensure the filters are applied to the same object within the array. The syntax is: <nested_field_parent>.{<filter_conditions>}.
 E.g: open_hours.{day:=Mon && close:>=11}
 
-Only include keywords from the user query that could be part of a restaurant name or address in the \`q\` parameter.
+Only include keywords from the user query that could be part of a restaurant name or address in the \`q\` parameter. Exclude generic category words like "restaurant", "restaurants", "cafe", "bar", "place", or similar.
 
 price_min and price_max represent the restaurant's general price range for a meal or dish:
 - price_min -> the lowest typical price the restaurant offers (e.g., cheapest dish or small portion).

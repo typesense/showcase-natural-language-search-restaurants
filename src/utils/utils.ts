@@ -5,7 +5,7 @@ export const EXAMPLE_SEARCH_TERMS = [
   'What can I have for lunch with 10€ in Paris',
   'Free wifi and wheelchair accessible',
   'Breakfast 5000 miles near me',
-  'Good restaurants in Berlin',
+  'Good restaurants in Dublin',
   'Restaurants open 4pm Sunday',
   'I am vegan',
   'I like spicy food',
