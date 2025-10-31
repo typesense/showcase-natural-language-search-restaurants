@@ -1,15 +1,23 @@
 import { NLSearchModelUpdateSchema } from 'typesense/lib/Typesense/NLSearchModel';
 import 'dotenv/config';
 import { client } from './typesense-client';
+import { ObjectNotFound, TypesenseError } from 'typesense/lib/Typesense/Errors';
 
 const GOOGLE_AI_STUDIO_API_KEY = process.env.GOOGLE_AI_STUDIO_API_KEY || '';
 const MODEL_ID =
   process.env.NEXT_PUBLIC_TYPESENSE_NL_MODEL_ID || 'gemini_restaurant';
 
 (async () => {
+  let model;
   try {
-    const model = await client.nlSearchModels(MODEL_ID).retrieve();
+    model = await client.nlSearchModels(MODEL_ID).retrieve();
+  } catch (err) {
+    if (err instanceof TypesenseError && err instanceof ObjectNotFound) {
+      console.log(err.message);
+    }
+  }
 
+  try {
     if (model) {
       console.log(`Found existing model with id: ${MODEL_ID}`);
 
@@ -43,9 +51,10 @@ You must use three-letter weekday abbreviation (Mon, Tue,...) to filter on the d
         temperature: 0.0,
       });
     }
+
+    console.log('Success!');
   } catch (err) {
     console.log(err);
     return;
   }
-  console.log('Success!');
 })();

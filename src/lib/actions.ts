@@ -9,7 +9,7 @@ export default function fetchData(
   searchParams: SearchParams<_Restaurant, string>
 ) {
   return async ({ pageParam }: { pageParam: number }) => {
-    const res = await typesense()
+    const res = await typesense
       .collections<_Restaurant>(clientEnv.TYPESENSE_COLLECTION_NAME)
       .documents()
       .search({
