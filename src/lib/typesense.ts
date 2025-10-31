@@ -53,5 +53,5 @@ export const typesense = new Typesense.Client({
         url: process.env.PUBLIC_TYPESENSE_NEAREST_NODE_URL,
       }
     : undefined,
-  connectionTimeoutSeconds: 5,
+  connectionTimeoutSeconds: 30,
 });
