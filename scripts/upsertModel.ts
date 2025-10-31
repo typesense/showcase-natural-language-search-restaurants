@@ -30,14 +30,21 @@ E.g: open_hours.{day:=Mon && close:>=11}
 
 Only include keywords from the user query that could be part of a restaurant name or address in the \`q\` parameter.
 
+price_min and price_max represent the restaurant's general price range for a meal or dish:
+- price_min -> the lowest typical price the restaurant offers (e.g., cheapest dish or small portion).
+- price_max -> the highest typical price the restaurant offers (e.g., premium dish or full meal).
+
+When comparing with an user's budget, treat this as a range:
+A restaurant matches if its price_min <= user_budget <= price_max.
+This means the restaurant offers options within or below the user's budget.
+
 To search within a Radius use this syntax in the filter_by: location:(lat, long, X km). You can also use miles "mi".
 E.g: location:(48.9, 2.34, 2 mi)
 The user's location will be embedded in the query in case they want to find restaurant near them (always remove it from your query after processing), in this format: USER:lat,long
 Use this user location for geosearch only if the query contains phrases like "near me".
 An user might ask to find restaurant near a place, in that case, use your knowlegde about the geolocation of that place.
 
-You must use three-letter weekday abbreviation (Mon, Tue,...) to filter on the day field of "open_hours".
-`,
+You must use three-letter weekday abbreviation (Mon, Tue,...) to filter on the day field of "open_hours".`,
       };
 
       console.log('Updating model with this configuration:', updatedConfig);
