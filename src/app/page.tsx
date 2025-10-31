@@ -20,25 +20,8 @@ import React from 'react';
 import { RequestMalformed } from 'typesense/lib/Typesense/Errors';
 import getUserLocation from '@/hooks/getUserLocation';
 
-// This version of typesense-js hasn't had support for NL search types yet
-declare module 'typesense/lib/Typesense/Documents' {
-  interface SearchResponse<T> {
-    parsed_nl_query: {
-      augmented_params: object;
-      generated_params: object;
-      parse_time_ms: number;
-    };
-  }
-  interface SearchParams<
-    TDoc extends DocumentSchema,
-    Infix extends string = string
-  > {
-    nl_query?: boolean;
-    nl_model_id?: string;
-    nl_query_debug?: boolean;
-  }
-}
 export type _TypesenseQuery = SearchParams<any, any>;
+export type ParsedNLQuery = SearchResponse<_Restaurant>['parsed_nl_query'];
 
 export default function Home() {
   return (
@@ -57,7 +40,9 @@ function Search() {
   const searchParams = useSearchParams();
   const q = searchParams.get('q') || '';
   const router = useRouter();
-  const [parsedNLQuery, setParsedNLQuery] = useState<object | null>(null);
+  const [parsedNLQuery, setParsedNLQuery] = useState<ParsedNLQuery | null>(
+    null
+  );
   const { location, error } = getUserLocation();
 
   const [loadingState, setLoadingState] = useState<'searching' | 'finished'>(
@@ -98,7 +83,7 @@ function Search() {
       setParsedNLQuery(searchResponse.parsed_nl_query);
 
       setData({
-        params: searchResponse.parsed_nl_query.augmented_params,
+        params: searchResponse.parsed_nl_query!.augmented_params,
         searchResponse,
       });
     } catch (error) {
@@ -140,7 +125,7 @@ function Search() {
     if (loadingState !== 'finished') return <LoaderSVG />;
 
     if (data) {
-      const parsedTime = data.searchResponse.parsed_nl_query.parse_time_ms;
+      const parsedTime = data.searchResponse.parsed_nl_query!.parse_time_ms;
       const searchTime = data.searchResponse.search_time_ms - parsedTime;
       return found == 0 ? (
         <div className='mt-20 text-light'>

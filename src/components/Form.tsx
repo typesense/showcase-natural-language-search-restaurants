@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { SearchIcon } from './icons';
 import { useRouter } from 'next/navigation';
 import ResponseDisplay from './ResponseDisplay';
+import { ParsedNLQuery } from '@/app/page';
 
 export default function Form({
   q,
@@ -9,7 +10,7 @@ export default function Form({
   onSubmit,
 }: {
   q: string;
-  parsedNLQuery: object | null;
+  parsedNLQuery: ParsedNLQuery | null;
   onSubmit: (q: string) => any;
 }) {
   const [query, setQuery] = useState('');

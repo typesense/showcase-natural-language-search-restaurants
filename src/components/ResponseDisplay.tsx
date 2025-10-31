@@ -27,7 +27,7 @@ export default function ResponseDisplay({
           <FileJson2 strokeWidth={1.5} className='stroke-gray-600' />
         </Button>
       </SheetTrigger>
-      <SheetContent className='w-[85vw]'>
+      <SheetContent className='lg:!min-w-[500px]'>
         <SheetHeader>
           <SheetTitle>Generated Typesense query</SheetTitle>
           <SheetDescription>
@@ -38,7 +38,7 @@ export default function ResponseDisplay({
             >
               See docs
             </a>{' '}
-            for more details.
+            for more details on response fields.
           </SheetDescription>
         </SheetHeader>
         <div className='mt-4 !text-sm'>
