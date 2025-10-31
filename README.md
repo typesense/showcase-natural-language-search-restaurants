@@ -10,7 +10,7 @@ Instead of needing to use specific keywords or precise filters, you can simply t
 This means you can find exactly what you're looking for with ease and flexibility, even if your exact keywords aren't in the restaurant's description. Experience a more intuitive and powerful way to discover your next dining destination!
 <br>
 <br>
-This demo uses the dataset "TripAdvisor European restaurants" which is available on a <a href="https://www.kaggle.com/datasets/stefanoleone992/tripadvisor-european-restaurants" target="_blank">Kaggle</a>.
+This demo uses the dataset "TripAdvisor European restaurants" which is available on <a href="https://www.kaggle.com/datasets/stefanoleone992/tripadvisor-european-restaurants" target="_blank">Kaggle</a>.
 
 ## Tech Stack
 
