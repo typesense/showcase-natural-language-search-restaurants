@@ -10,7 +10,6 @@ export const EXAMPLE_SEARCH_TERMS = [
   'I am vegan',
   'I like spicy food',
   'Restaurants open 5 am to 11 pm',
-  'Restaurants good for kids',
 ];
 
 export const TYPESENSE_CONFIG = {
