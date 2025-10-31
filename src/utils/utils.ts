@@ -2,7 +2,7 @@ export const EXAMPLE_SEARCH_TERMS = [
   'Best pizza in Italy',
   'Restaurants 2km near Eiffel Tower',
   'Restaurant with 5 stars food and service rating',
-  '5€ lunch in Paris',
+  'What can I have for lunch with 10€ in Paris',
   'Free wifi and wheelchair accessible',
   'Breakfast 5000 miles near me',
   'Good restaurants in Berlin',
