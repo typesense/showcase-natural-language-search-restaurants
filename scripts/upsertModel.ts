@@ -1,7 +1,7 @@
-import { NLSearchModelUpdateSchema } from 'typesense/lib/Typesense/NLSearchModel';
 import 'dotenv/config';
 import { client } from './typesense-client';
 import { ObjectNotFound, TypesenseError } from 'typesense/lib/Typesense/Errors';
+import { NLSearchModelBase } from 'typesense/lib/Typesense/NLSearchModels';
 
 const GOOGLE_AI_STUDIO_API_KEY = process.env.GOOGLE_AI_STUDIO_API_KEY || '';
 const MODEL_ID =
@@ -21,7 +21,8 @@ const MODEL_ID =
     if (model) {
       console.log(`Found existing model with id: ${MODEL_ID}`);
 
-      const updatedConfig: NLSearchModelUpdateSchema = {
+      const updatedConfig: NLSearchModelBase = {
+        model_name: 'google/gemini-2.5-flash',
         temperature: 0.2,
         system_prompt: `Filtering Nested Arrays of Objects:
 When filtering on fields inside nested array objects, you need to use a special syntax to ensure the filters are applied to the same object within the array. The syntax is: <nested_field_parent>.{<filter_conditions>}.
@@ -45,7 +46,7 @@ You must use three-letter weekday abbreviation (Mon, Tue,...) to filter on the d
       );
       await client.nlSearchModels().create({
         id: MODEL_ID,
-        model_name: 'google/gemini-2.5-flash-lite',
+        model_name: 'google/gemini-2.5-flash',
         api_key: GOOGLE_AI_STUDIO_API_KEY,
         max_bytes: 16000,
         temperature: 0.0,
