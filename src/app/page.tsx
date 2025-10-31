@@ -84,13 +84,13 @@ function Search() {
       const query =
         q + (location ? ` USER:${location}` : 'USER:permissionDenied');
 
-      const searchResponse = await typesense()
+      const searchResponse = await typesense
         .collections<_Restaurant>(clientEnv.TYPESENSE_COLLECTION_NAME)
         .documents()
         .search({
           q: query,
           nl_query: true,
-          nl_model_id: 'gemini-model',
+          nl_model_id: clientEnv.NL_MODEL_ID || 'gemini_restaurant',
           query_by: TYPESENSE_CONFIG.query_by,
           per_page: TYPESENSE_CONFIG.per_page,
         });

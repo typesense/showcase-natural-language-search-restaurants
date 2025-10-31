@@ -1,15 +1,14 @@
 import { NLSearchModelUpdateSchema } from 'typesense/lib/Typesense/NLSearchModel';
-import { typesense } from '../src/lib/typesense';
 import 'dotenv/config';
+import { client } from './typesense-client';
 
 const GOOGLE_AI_STUDIO_API_KEY = process.env.GOOGLE_AI_STUDIO_API_KEY || '';
-const MODEL_ID = 'gemini-model';
+const MODEL_ID =
+  process.env.NEXT_PUBLIC_TYPESENSE_NL_MODEL_ID || 'gemini_restaurant';
 
 (async () => {
   try {
-    const model = await typesense({ isServer: true })
-      .nlSearchModels(MODEL_ID)
-      .retrieve();
+    const model = await client.nlSearchModels(MODEL_ID).retrieve();
 
     if (model) {
       console.log(`Found existing model with id: ${MODEL_ID}`);
@@ -31,16 +30,14 @@ You must use three-letter weekday abbreviation (Mon, Tue,...) to filter on the d
       };
 
       console.log('Updating model with this configuration:', updatedConfig);
-      await typesense({ isServer: true })
-        .nlSearchModels(MODEL_ID)
-        .update(updatedConfig);
+      await client.nlSearchModels(MODEL_ID).update(updatedConfig);
     } else {
       console.log(
         `Model with id: ${MODEL_ID} not found. Creating a new model...`
       );
-      await typesense({ isServer: true }).nlSearchModels().create({
+      await client.nlSearchModels().create({
         id: MODEL_ID,
-        model_name: 'google/gemini-2.5-flash',
+        model_name: 'google/gemini-2.5-flash-lite',
         api_key: GOOGLE_AI_STUDIO_API_KEY,
         max_bytes: 16000,
         temperature: 0.0,

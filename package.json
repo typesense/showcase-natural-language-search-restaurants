@@ -2,13 +2,13 @@
   "main": "lib/index.js",
   "scripts": {
     "start": "next start",
-    "build": "next build",
+    "build": "npm run upsertModel:typesense && next build",
     "build:watch": "tsc --watch",
     "dev": "next dev",
     "lint": "next lint",
     "start:typesense": "docker compose up",
     "index:typesense": "npx tsx ./scripts/indexTypesense.ts",
-    "createModel:typesense": "npx tsx ./scripts/createModel.ts"
+    "upsertModel:typesense": "npx tsx ./scripts/upsertModel.ts"
   },
   "name": "showcase-natural-language-search-restaurants",
   "version": "0.1.0",

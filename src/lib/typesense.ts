@@ -35,16 +35,23 @@ export type _Restaurant = {
   price_min: number;
   price_max: number;
 };
-export const typesense = ({ isServer = false } = {}) =>
-  new Typesense.Client({
-    apiKey:
-      (isServer
-        ? process.env.TYPESENSE_ADMIN_API_KEY
-        : process.env.NEXT_PUBLIC_TYPESENSE_SEARCH_ONLY_API_KEY) || 'xyz',
-    nodes: [
-      {
-        url: process.env.NEXT_PUBLIC_TYPESENSE_URL || 'http://localhost:8108',
-      },
-    ],
-    connectionTimeoutSeconds: 60 * 60,
-  });
+
+export const typesense = new Typesense.Client({
+  apiKey: process.env.NEXT_PUBLIC_TYPESENSE_SEARCH_ONLY_API_KEY || 'xyz',
+  nodes: process.env.NEXT_PUBLIC_TYPESENSE_URLS
+    ? process.env.NEXT_PUBLIC_TYPESENSE_URLS.split(',').map((url: string) => ({
+        url,
+      }))
+    : [
+        {
+          url: 'http://localhost:8108',
+        },
+      ],
+
+  nearestNode: process.env.PUBLIC_TYPESENSE_NEAREST_NODE_URL
+    ? {
+        url: process.env.PUBLIC_TYPESENSE_NEAREST_NODE_URL,
+      }
+    : undefined,
+  connectionTimeoutSeconds: 5,
+});
