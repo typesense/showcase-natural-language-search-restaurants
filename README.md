@@ -1,5 +1,5 @@
 <h1>
- 🔥 🤖 🍖 Natural Language Restaurant Search powered by Typesense
+ 🔥 🤖 🍖 Natural Language Search Restaurants powered by Typesense
 </h1>
 This demo restaurant search showcases the new Natural Language Search feature powered by Typesense. This allows users to search for restaurants using everyday language.
 <br>
