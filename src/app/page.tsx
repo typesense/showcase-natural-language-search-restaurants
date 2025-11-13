@@ -142,7 +142,8 @@ function Search() {
       const searchTime = data.searchResponse.search_time_ms - parsedTime;
       return found == 0 ? (
         <>
-          <div className='!text-sm w-full items-start mb-4'>
+          <div className='!text-xs border border-gray-600 p-2 rounded-md w-full items-start mb-4'>
+            <div className='mb-2'>Generated Typesense query:</div>
             <JsonView src={parsedNLQuery} theme='atom' />
           </div>
           <div className='mt-20 text-light'>
@@ -151,12 +152,13 @@ function Search() {
         </>
       ) : (
         <>
+          <div className='!text-xs border border-gray-600 p-2 rounded-md w-full items-start mb-4'>
+            <div className='mb-2'>Generated Typesense query:</div>
+            <JsonView src={parsedNLQuery} theme='atom' />
+          </div>
           <div className='self-start mb-2 text-sm'>
             Found {found} {found > 1 ? 'results' : 'result'} in {searchTime}ms,
-            parsing took {parsedTime}ms. Generated Typesense query:
-          </div>
-          <div className='!text-sm w-full items-start mb-4'>
-            <JsonView src={parsedNLQuery} theme='atom' />
+            parsing took {parsedTime}ms.
           </div>
           <RestaurantList
             initialData={{
