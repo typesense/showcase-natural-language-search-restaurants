@@ -28,7 +28,7 @@ This demo uses the dataset "TripAdvisor European restaurants" which is available
 │   ├── data/
 │   │   └── restaurants.jsonl
 │   ├── indexTypesense.ts # script that create a collection and index data from restaurants.json into typesense server
-│   └── createModel.ts # create a Typesense natural language search model, update system_prompt if model already exists
+│   └── upsertModel.ts # create a Typesense natural language search model, update system_prompt if model already exists
 └── src/
     ├── app/
     │   └── page.tsx # main application
@@ -41,7 +41,7 @@ This demo uses the dataset "TripAdvisor European restaurants" which is available
         └── typesense.ts # typesense config
 ```
 
-You can view the specific LLM instructions for this project in [createModel.ts](/scripts/createModel.ts)
+You can view the specific LLM instructions for this project in [upsertModel.ts](/scripts/upsertModel.ts)
 
 ## Development
 
