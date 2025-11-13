@@ -69,9 +69,7 @@ function Search() {
 
     try {
       // embedding the user location inside the query
-      const query =
-        q +
-        (location ? ` USER:${location}` : ' USER:location_permissionDenied');
+      const query = q + (location ? ` USER:${location}` : '');
 
       const searchResponse = await typesense
         .collections<_Restaurant>(clientEnv.TYPESENSE_COLLECTION_NAME)
