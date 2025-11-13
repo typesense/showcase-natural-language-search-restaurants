@@ -3,7 +3,7 @@ import RestaurantList from '@/components/RestaurantList';
 import ExampleSearchTerms from '@/components/ExampleSearchTerms';
 import Heading from '@/components/Heading';
 import { _Restaurant, typesense } from '@/lib/typesense';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import {
   SearchResponse,
   SearchParams,
@@ -59,6 +59,7 @@ function Search() {
 
   const found = data?.searchResponse.found || 0;
   const nextPage = 1 * TYPESENSE_CONFIG.per_page < found ? 2 : null;
+  const abortController = useRef(new AbortController());
 
   // Here we perform an initial search to get the llm generated params which we will then use for subsequent pagination requests
   async function initialSearch(q: string) {
@@ -66,7 +67,6 @@ function Search() {
     setParsedNLQuery(null);
     setData(undefined);
     setLoadingState('searching');
-
     try {
       // embedding the user location inside the query
       const query = q + (location ? ` USER:${location}` : '');
@@ -74,13 +74,16 @@ function Search() {
       const searchResponse = await typesense
         .collections<_Restaurant>(clientEnv.TYPESENSE_COLLECTION_NAME)
         .documents()
-        .search({
-          q: query,
-          nl_query: true,
-          nl_model_id: clientEnv.NL_MODEL_ID || 'gemini_restaurant',
-          query_by: TYPESENSE_CONFIG.query_by,
-          per_page: TYPESENSE_CONFIG.per_page,
-        });
+        .search(
+          {
+            q: query,
+            nl_query: true,
+            nl_model_id: clientEnv.NL_MODEL_ID || 'gemini_restaurant',
+            query_by: TYPESENSE_CONFIG.query_by,
+            per_page: TYPESENSE_CONFIG.per_page,
+          },
+          { abortSignal: abortController.current.signal }
+        );
 
       setParsedNLQuery(searchResponse.parsed_nl_query);
 
@@ -90,9 +93,13 @@ function Search() {
       });
     } catch (error) {
       let errorMsg = '';
-      console.log(error);
       if (error instanceof RequestMalformed) {
         errorMsg = error.message;
+      }
+      if (
+        (error as { message: string }).message == 'Request aborted by caller.'
+      ) {
+        return;
       }
       errorToast(errorMsg || 'Please try again with a different query.');
     } finally {
@@ -119,8 +126,12 @@ function Search() {
   }, [q]);
 
   useEffect(() => {
+    abortController.current.abort();
+    abortController.current = new AbortController();
     // Initial search
     if (q && (location || error)) initialSearch(q);
+
+    return () => abortController.current.abort();
   }, [q, location, error]);
 
   const render = () => {
