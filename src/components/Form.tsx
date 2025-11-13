@@ -1,16 +1,13 @@
 import { useEffect, useState } from 'react';
 import { SearchIcon } from './icons';
 import { useRouter } from 'next/navigation';
-import ResponseDisplay from './ResponseDisplay';
 import { ParsedNLQuery } from '@/app/page';
 
 export default function Form({
   q,
-  parsedNLQuery,
   onSubmit,
 }: {
   q: string;
-  parsedNLQuery: ParsedNLQuery | null;
   onSubmit: (q: string) => any;
 }) {
   const [query, setQuery] = useState('');
@@ -38,7 +35,6 @@ export default function Form({
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Type in what you're looking for in a restaurant , e.g. 'best pizza in Italy' or 'sushi in Paris'"
         />
-        {parsedNLQuery && <ResponseDisplay parsedNLQuery={parsedNLQuery} />}
       </div>
       <button
         className='bg-[#cffc75] aspect-square w-11 grid place-content-center rounded-full hover:bg-[#bee76b] transition'

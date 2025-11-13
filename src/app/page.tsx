@@ -19,6 +19,9 @@ import { clientEnv } from '@/utils/env';
 import React from 'react';
 import { RequestMalformed } from 'typesense/lib/Typesense/Errors';
 import getUserLocation from '@/hooks/getUserLocation';
+import JsonView from 'react18-json-view';
+// @ts-ignore
+import 'react18-json-view/src/style.css';
 
 export type _TypesenseQuery = SearchParams<any, any>;
 export type ParsedNLQuery = SearchResponse<_Restaurant>['parsed_nl_query'];
@@ -129,14 +132,22 @@ function Search() {
       const parsedTime = data.searchResponse.parsed_nl_query!.parse_time_ms;
       const searchTime = data.searchResponse.search_time_ms - parsedTime;
       return found == 0 ? (
-        <div className='mt-20 text-light'>
-          Oops! Couldn't find what you are looking for.
-        </div>
+        <>
+          <div className='!text-sm w-full items-start mb-4'>
+            <JsonView src={parsedNLQuery} theme='atom' />
+          </div>
+          <div className='mt-20 text-light'>
+            Oops! Couldn't find what you are looking for.
+          </div>
+        </>
       ) : (
         <>
-          <div className='self-start mb-4 text-sm'>
+          <div className='self-start mb-2 text-sm'>
             Found {found} {found > 1 ? 'results' : 'result'} in {searchTime}ms,
-            parsing took {parsedTime}ms.
+            parsing took {parsedTime}ms. Generated Typesense query:
+          </div>
+          <div className='!text-sm w-full items-start mb-4'>
+            <JsonView src={parsedNLQuery} theme='atom' />
           </div>
           <RestaurantList
             initialData={{
@@ -160,11 +171,7 @@ function Search() {
 
   return (
     <>
-      <Form
-        q={q}
-        parsedNLQuery={parsedNLQuery}
-        onSubmit={(q) => initialSearch(q)}
-      />
+      <Form q={q} onSubmit={(q) => initialSearch(q)} />
       {render()}
     </>
   );
