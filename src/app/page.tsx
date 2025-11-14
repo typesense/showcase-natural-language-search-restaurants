@@ -24,7 +24,9 @@ import JsonView from 'react18-json-view';
 import 'react18-json-view/src/style.css';
 
 export type _TypesenseQuery = SearchParams<any, any>;
-export type ParsedNLQuery = SearchResponse<_Restaurant>['parsed_nl_query'];
+export type ParsedNLQuery = NonNullable<
+  SearchResponse<_Restaurant>['parsed_nl_query']
+>['generated_params'];
 
 export default function Home() {
   return (
@@ -85,7 +87,7 @@ function Search() {
           { abortSignal: abortController.current.signal }
         );
 
-      setParsedNLQuery(searchResponse.parsed_nl_query);
+      setParsedNLQuery(searchResponse.parsed_nl_query!.generated_params);
 
       setData({
         params: searchResponse.parsed_nl_query!.augmented_params,
